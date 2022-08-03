@@ -8,10 +8,10 @@ This API is aimed to manage a Travel Social Network where users can recommend an
 To run this API, user must create and configure a database. [MySQL](https://dev.mysql.com/downloads/installer/) is the database management system which has been used for the app development.  
 Once database is created:
 
-• run your code editor
-• execute `npm install` command
-• create a `.env` file and fill it with database parameters(refer to file “env.example”)
-• execute `node ./db/initDB.js`
+- run your code editor
+- execute `npm install` command
+- create a `.env` file and fill it with database parameters(refer to file “env.example”)
+- execute `node ./db/initDB.js`
 
 ### Non-logged in users
 
