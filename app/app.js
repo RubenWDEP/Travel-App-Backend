@@ -21,6 +21,8 @@ const { getPostsFromCurrentUserController } = require("../controllers/getPostsFr
 const { deletePostController } = require("../controllers/deletePostController");
 const { getTotalVotesController } = require("../controllers/getTotalVotesController");
 const { preSearchController } = require("../controllers/preSearchCrontoller");
+const { commentsController } = require("../controllers/commentsController");
+const { getCommentsController } = require("../controllers/getCommentsController");
 
 //Esta debe ser el primer middleware para poder trabajar con las imágenes-----
 app.use(fileupload());
@@ -38,6 +40,7 @@ app.get("/getrecommendations", getFilteredRecommendationsController);
 app.post("/gettotalvotes", getTotalVotesController);
 app.post("/register", userRegister);
 app.post("/login", userLogin);
+app.get("/comments/load", getCommentsController);
 
 // Rutas privadas
 app.get("/login/onlineuser", authUser, getUserController);
@@ -47,6 +50,8 @@ app.post("/raterecommendation", authUser, rateRecommendations);
 app.get("/getposts", authUser, getPostsFromCurrentUserController);
 app.post("/deletepost", authUser, deletePostController);
 app.get("/presearch", authUser, preSearchController);
+app.post("/comments", authUser, commentsController);
+// app.put("/comments/delete", authUser, deleteCommentsController);
 
 //Errores----------------------------------------------
 app.use((req, res) => {
@@ -66,7 +71,7 @@ app.use((error, req, res, next) => {
   });
 });
 
-//El puerto 3000 está  escuchando:
+//El puerto 3001 está  escuchando:
 app.listen(3001, () => {
   console.log("Corriendo servidor en el puerto 3001...");
 });

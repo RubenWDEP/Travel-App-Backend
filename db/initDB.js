@@ -33,7 +33,8 @@ async function main() {
             entradilla VARCHAR(150), 
             texto VARCHAR(280) NOT NULL,
             foto VARCHAR(200),
-            id_user_reg INTEGER NOT NULL, 
+            id_user_reg INTEGER NOT NULL,
+            create_by VARCHAR(50) NOT NULL,
             create_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             foreign key (id_user_reg) references reglog(id_reg) on delete cascade)`);
 
@@ -73,8 +74,24 @@ async function main() {
     if (createCountingArrangingTable[0].warningStatus === 1) {
       console.log("La tabla para contar/ordenar los votos totales ya existe.");
     } else {
-      console.log("Se ha creado la tabla de votaciones correctamente");
+      console.log("Se ha creado la tabla de recuento de votos correctamente");
     }
+
+    const createCommentsTable =
+      await connection.query(`CREATE TABLE IF NOT EXISTS comments(
+            id_comment INTEGER PRIMARY KEY AUTO_INCREMENT,
+            id_com_rec INTEGER NOT NULL,
+            comment VARCHAR (100) NOT NULL,
+            create_by VARCHAR(50),
+            create_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            foreign key (id_com_rec) references recomendaciones(id_rec) on delete cascade)`);
+
+    if (createCommentsTable[0].warningStatus === 1) {
+      console.log("La tabla para comentar los post  ya existe.");
+    } else {
+      console.log("Se ha creado la tabla de comentarios de posts correctamente");
+    }
+
 
   } catch (error) {
     console.error(error);

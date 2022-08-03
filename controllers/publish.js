@@ -1,11 +1,12 @@
 const Joi = require("joi");
 const path = require("path");
 const sharp = require("sharp");
-const {nanoid} = require("nanoid"); //ojo al requerir nanoid, hay que hacer destructuring...
+const { nanoid } = require("nanoid"); //ojo al requerir nanoid, hay que hacer destructuring...
 const { generateErrors, createPathIfNotExists } = require("../auxOps/helpers");
-const {createRecommendation} = require("../db/publishRecommendation");
+const { createRecommendation } = require("../db/publishRecommendation");
 const { getRecommendationByRegisteredUser } = require("../db/getRecommendation");
 
+const schemaCreate_by = Joi.string().min(1).max(50).required();
 const schemaTitulo = Joi.string().min(1).max(50).required();
 const schemaCategoria = Joi.string().min(1).max(50).required();
 const schemaLocation = Joi.string().min(1).max(50).required();
@@ -13,26 +14,27 @@ const schemaEntradilla = Joi.string().min(1).max(50).required();
 const schemaTexto = Joi.string().max(280).required();
 
 
-const publishRecommendations = async (req, res, next)=>{
-    
+const publishRecommendations = async (req, res, next) => {
+
     try {
         console.log(req.files);
         console.log(req.body);
         console.log("Esto es el user ID", req.userId);
         const id_user_reg = req.userId;
-        const { titulo, categoria, lugar, entradilla, texto} = req.body;
+        const { titulo, categoria, lugar, entradilla, texto, create_by } = req.body;
+        const validateRecommendationCreate_by = schemaCreate_by.validate(create_by);
         const validateRecommendationTitle = schemaTitulo.validate(titulo);
         const validateRecommendationcategory = schemaCategoria.validate(categoria);
         const validateRecommendationLocation = schemaLocation.validate(lugar);
         const validateRecommendationEnt = schemaEntradilla.validate(entradilla);
         const validateRecommendationText = schemaTexto.validate(texto);
         // const validateRecommendation = recommendation.validate({titulo, categoria, entradilla, texto});
-        if(validateRecommendationTitle.error || validateRecommendationcategory.error || validateRecommendationEnt.error || validateRecommendationText.error || validateRecommendationLocation.error ){
+        if (validateRecommendationTitle.error || validateRecommendationcategory.error || validateRecommendationEnt.error || validateRecommendationText.error || validateRecommendationLocation.error || validateRecommendationCreate_by.error) {
             throw generateErrors("Algunos de los campos están vacíos.", 400)
         }
 
         let fotoName;
-        if(req.files && req.files.foto) {
+        if (req.files && req.files.foto) {
             //Primero creo el directorio donde voy a guardar los archivos
             const uploadDirectory = path.resolve(__dirname, "../upload");
             // console.log(uploadDirectory);
@@ -47,7 +49,7 @@ const publishRecommendations = async (req, res, next)=>{
             await image.toFile(path.resolve(uploadDirectory, fotoName));
         }
 
-        const publish = await createRecommendation(titulo, categoria, lugar, entradilla, texto, fotoName, id_user_reg);
+        const publish = await createRecommendation(titulo, categoria, lugar, entradilla, texto, fotoName, id_user_reg, create_by);
 
         const publishData = await getRecommendationByRegisteredUser(req.userId);
         console.log(publishData);
@@ -65,6 +67,6 @@ const publishRecommendations = async (req, res, next)=>{
 
 
 module.exports = {
-    publishRecommendations, 
+    publishRecommendations,
 
 }
