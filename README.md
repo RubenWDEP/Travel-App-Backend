@@ -5,7 +5,8 @@ This API is aimed to manage a Travel Social Network where users can recommend an
 
 ## Previous configuration
 
-To run this API, user must create and configure a database. [MySQL](https://dev.mysql.com/downloads/installer/) is the database management system which has been used for the app development.  
+To run this API, user must create and configure a database and have installed [nodejs](https://nodejs.org/es/download/) v16.13.2 or greater. [MySQL](https://dev.mysql.com/downloads/installer/) is the database management system used for the app development.
+
 Once database is created:
 
 - run your code editor
